@@ -1185,13 +1185,20 @@ function goToScreen(screenId) {
             nextCard();
         }
 
-        // カードいいね
-        // カードいいね
+    
+
+// カードいいね
+// カードいいね
 function likeCard() {
+    // 連続クリック防止
+    if (isAnimating) return;
+    isAnimating = true;
+    
     // 現在のカードのプロフィールを取得
     const currentProfile = profiles[currentCardIndex];
     if (!currentProfile) {
         console.error('No profile found at index:', currentCardIndex);
+        isAnimating = false;
         return;
     }
     
@@ -1201,15 +1208,18 @@ function likeCard() {
     
     // 3回目のいいねでマッチング
     if (likeCount === 3) {
-        matchedPartner = currentProfile; // ここを修正
+        matchedPartner = currentProfile;
         setTimeout(() => {
             goToMatch();
+            isAnimating = false;
         }, 1000);
     } else {
-        nextCard();
+        setTimeout(() => {
+            nextCard();
+            isAnimating = false;
+        }, 400);
     }
 }
-
         // カードアニメーション
         function animateCard(direction) {
             const topCard = document.querySelector('.profile-card');
