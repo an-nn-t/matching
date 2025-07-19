@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tsunagaru AI - AIと紡ぐ、新しいつながりの物語</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="screen start-screen active" id="start-screen">
+            <div class="logo">🤝 Tsunagaru AI</div>
+            <div class="subtitle">AIと紡ぐ、新しいつながりの物語を、<br>今すぐ体験する。</div>
+            <button class="cta-button" onclick="goToScreen('purpose-screen')">デモを体験する</button>
+        </div>
+
+        <div class="screen purpose-screen" id="purpose-screen">
+            <div class="purpose-title">どのような『つながり』を探しますか？</div>
+            <div class="purpose-cards">
+                <div class="purpose-card" onclick="selectPurpose(this, 'hobby')">
+                    <div class="purpose-icon">🎨</div>
+                    <div class="purpose-text">趣味の仲間を探す</div>
+                </div>
+                <div class="purpose-card" onclick="selectPurpose(this, 'friend')">
+                    <div class="purpose-icon">🤝</div>
+                    <div class="purpose-text">気軽な友達を探す</div>
+                </div>
+                <div class="purpose-card" onclick="selectPurpose(this, 'study')">
+                    <div class="purpose-icon">📚</div>
+                    <div class="purpose-text">学び合い・語学交換</div>
+                </div>
+                <div class="purpose-card" onclick="selectPurpose(this, 'romance')">
+                    <div class="purpose-icon">💕</div>
+                    <div class="purpose-text">恋愛・パートナー探し</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="screen profile-screen" id="profile-screen">
+            <div class="profile-title">AIがあなたのことを知るために、<br>いくつか質問させてください。</div>
+            
+            <div class="form-group">
+                <label class="form-label">ニックネーム</label>
+                <input type="text" class="form-input" id="nickname" placeholder="例: たろう">
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">年代</label>
+                <select class="form-select" id="age">
+                    <option value="">選択してください</option>
+                    <option value="20代">20代</option>
+                    <option value="30代">30代</option>
+                    <option value="40代">40代</option>
+                    <option value="50代">50代</option>
+                    <option value="60代">60代</option>
+                    <option value="70代以上">70代以上</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">興味・関心のあること</label>
+                <div class="tags-container">
+                    <div class="tag" onclick="toggleTag(this)">#散歩</div>
+                    <div class="tag" onclick="toggleTag(this)">#カフェ巡り</div>
+                    <div class="tag" onclick="toggleTag(this)">#映画鑑賞</div>
+                    <div class="tag" onclick="toggleTag(this)">#歴史</div>
+                    <div class="tag" onclick="toggleTag(this)">#料理</div>
+                    <div class="tag" onclick="toggleTag(this)">#ペット</div>
+                    <div class="tag" onclick="toggleTag(this)">#旅行</div>
+                    <div class="tag" onclick="toggleTag(this)">#音楽</div>
+                    <div class="tag" onclick="toggleTag(this)">#読書</div>
+                    <div class="tag" onclick="toggleTag(this)">#アニメ</div>
+                </div>
+            </div>
+            
+            <button class="analyze-button" id="analyze-btn" onclick="startAnalysis()">AIに分析してもらう</button>
+        </div>
+
+        <div class="screen analysis-screen" id="analysis-screen">
+            <div class="analysis-text" id="analysis-text">あなたに合いそうな人を探しています...</div>
+            <div class="analysis-animation" id="analysis-animation"></div>
+            <div class="radar-chart" id="radar-chart">
+                <svg width="150" height="150" viewBox="0 0 150 150">
+                    <polygon points="75,15 120,45 120,105 75,135 30,105 30,45" 
+                             fill="none" stroke="#fff" stroke-width="2" opacity="0.3"/>
+                    <polygon points="75,25 110,50 110,100 75,125 40,100 40,50" 
+                             fill="none" stroke="#fff" stroke-width="2" opacity="0.5"/>
+                    <polygon points="75,35 100,55 100,95 75,115 50,95 50,55" 
+                             fill="none" stroke="#fff" stroke-width="2" opacity="0.7"/>
+                    <polygon points="75,30 108,52 105,98 75,118 45,98 48,52" 
+                             fill="rgba(255,255,255,0.2)" stroke="#fff" stroke-width="2"/>
+                    <text x="75" y="10" text-anchor="middle" fill="#fff" font-size="10">協調性</text>
+                    <text x="130" y="50" text-anchor="middle" fill="#fff" font-size="10">好奇心</text>
+                    <text x="130" y="110" text-anchor="middle" fill="#fff" font-size="10">優しさ</text>
+                    <text x="75" y="145" text-anchor="middle" fill="#fff" font-size="10">積極性</text>
+                    <text x="20" y="110" text-anchor="middle" fill="#fff" font-size="10">知識欲</text>
+                    <text x="20" y="50" text-anchor="middle" fill="#fff" font-size="10">共感力</text>
+                </svg>
+            </div>
+        </div>
+
+        <div class="screen main-screen" id="main-screen">
+            <div class="header">
+                <div class="user-info">
+                    <div class="user-avatar" id="user-avatar">T</div>
+                    <span id="user-name">たろう</span>
+                </div>
+                <div class="ai-score">AI信用度: 95%</div>
+            </div>
+            
+            <div class="card-stack" id="card-stack">
+                </div>
+            
+            <div class="action-buttons">
+                <button class="action-btn reject-btn" onclick="rejectCard()">✕</button>
+                <button class="action-btn like-btn" onclick="likeCard()">♥</button>
+            </div>
+        </div>
+
+        <div class="screen match-screen" id="match-screen">
+            <div class="celebration">🎉</div>
+            <div class="match-text" id="match-text">恵子さんとマッチしました！</div>
+            <div class="match-profiles">
+                <div class="match-avatar" id="user-match-avatar">T</div>
+                <div style="font-size: 2rem;">💕</div>
+                <div class="match-avatar" id="partner-match-avatar">恵</div>
+            </div>
+            <div class="match-buttons">
+                <button class="match-btn primary" onclick="goToChat(true)">AIに初メッセージを提案してもらう</button>
+                <button class="match-btn secondary" onclick="goToChat(false)">自分でメッセージを送る</button>
+            </div>
+        </div>
+
+        <div class="screen chat-screen" id="chat-screen">
+            <div class="chat-header" id="chat-header">恵子さんとのチャット</div>
+            <div class="chat-messages" id="chat-messages">
+                <div class="message received">
+                    <div class="message-bubble">マッチングありがとうございます！よろしくお願いします。</div>
+                </div>
+            </div>
+            
+            <div class="ai-suggestions hide" id="ai-suggestions">
+                <div class="ai-suggestion" onclick="selectSuggestion(this, 0)">
+                    こちらこそ、よろしくお願いします！プロフィール拝見しました。<span id="suggestion-hobby">俳句</span>がお好きなんですね。私も興味があるのですが、何かおすすめはありますか？
+                </div>
+                <div class="ai-suggestion" onclick="selectSuggestion(this, 1)">
+                    マッチありがとうございます！<span id="suggestion-user-hobby">散歩</span>が好きな<span id="suggestion-user-name">たろう</span>です。気軽にお話しできたら嬉しいです。
+                </div>
+                <div class="ai-suggestion" onclick="selectSuggestion(this, 2)">
+                    嬉しいです！これから、たくさんお話しできるのを楽しみにしていますね。
+                </div>
+            </div>
+            
+            <div class="chat-input">
+                <input type="text" class="message-input" id="message-input" placeholder="メッセージを入力...">
+                <button class="ai-assist-btn" onclick="showAISuggestions()">AIアシスト ✨</button>
+                <button class="send-btn" onclick="sendMessage()">送信</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

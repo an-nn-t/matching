@@ -4,16 +4,779 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tsunagaru AI - AIと紡ぐ、新しいつながりの物語</title>
-    <link rel="stylesheet" href="style.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+            min-height: 100vh;
+            background: white;
+            box-shadow: 0 0 30px rgba(0,0,0,0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .screen {
+            width: 100%;
+            height: 100vh;
+            position: absolute;
+            top: 0;
+            left: 0;
+            opacity: 0;
+            transform: translateX(100%);
+            transition: all 0.5s ease-in-out;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .screen.active {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .screen.prev {
+            transform: translateX(-100%);
+        }
+
+        /* スタート画面 */
+        .start-screen {
+            background: linear-gradient(135deg, #4a90e2 0%, #7b68ee 100%);
+            color: white;
+            text-align: center;
+        }
+
+        .logo {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            margin-bottom: 40px;
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+
+        .cta-button {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ff8e53 100%);
+            color: white;
+            border: none;
+            padding: 18px 40px;
+            font-size: 1.1rem;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+            font-weight: bold;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
+        }
+
+        /* 目的選択画面 */
+        .purpose-screen {
+            background: white;
+            padding: 40px 20px;
+        }
+
+        .purpose-title {
+            font-size: 1.5rem;
+            text-align: center;
+            margin-bottom: 30px;
+            color: #4a90e2;
+            font-weight: bold;
+        }
+
+        .purpose-cards {
+            display: grid;
+            gap: 15px;
+        }
+
+        .purpose-card {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .purpose-card:hover {
+            border-color: #4a90e2;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(74, 144, 226, 0.2);
+        }
+
+        .purpose-card.selected {
+            background: linear-gradient(135deg, #4a90e2 0%, #7b68ee 100%);
+            color: white;
+            border-color: #4a90e2;
+        }
+
+        .purpose-icon {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .purpose-text {
+            font-size: 1.1rem;
+            font-weight: bold;
+        }
+
+        /* プロフィール作成画面 */
+        .profile-screen {
+            background: white;
+            padding: 30px 20px;
+            justify-content: flex-start;
+            padding-top: 60px;
+        }
+
+        .profile-title {
+            font-size: 1.3rem;
+            text-align: center;
+            margin-bottom: 30px;
+            color: #4a90e2;
+            font-weight: bold;
+            line-height: 1.5;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+            width: 100%;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #333;
+            font-size: 1rem;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #4a90e2;
+        }
+
+        .form-select {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1rem;
+            background: white;
+            cursor: pointer;
+        }
+
+        .tags-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .tag {
+            background: #f0f0f0;
+            border: 2px solid #e0e0e0;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .tag.selected {
+            background: #4a90e2;
+            color: white;
+            border-color: #4a90e2;
+        }
+
+        .analyze-button {
+            background: linear-gradient(135deg, #4a90e2 0%, #7b68ee 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.1rem;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+            width: 100%;
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+        .analyze-button.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .analyze-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(74, 144, 226, 0.3);
+        }
+
+        /* AI分析画面 */
+        .analysis-screen {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .analysis-animation {
+            width: 200px;
+            height: 200px;
+            margin: 40px auto;
+            position: relative;
+        }
+
+        .particle {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background: #ff6b6b;
+            border-radius: 50%;
+            animation: float 2s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { 
+                transform: translateY(0) scale(1);
+                opacity: 1;
+            }
+            50% { 
+                transform: translateY(-20px) scale(1.2);
+                opacity: 0.7;
+            }
+        }
+
+        .radar-chart {
+            width: 150px;
+            height: 150px;
+            margin: 20px auto;
+            position: relative;
+            opacity: 0;
+            transform: scale(0);
+            transition: all 1s ease;
+        }
+
+        .radar-chart.show {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .analysis-text {
+            font-size: 1.2rem;
+            margin: 20px 0;
+            min-height: 30px;
+        }
+
+        /* メイン画面 */
+        .main-screen {
+            background: white;
+            padding: 20px;
+            justify-content: flex-start;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding: 15px 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #4a90e2 0%, #7b68ee 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .ai-score {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ff8e53 100%);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .card-stack {
+            position: relative;
+            width: 100%;
+            height: 500px;
+            margin: 20px 0;
+        }
+
+        .profile-card {
+            position: absolute;
+            width: 100%;
+            height: 450px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .profile-card:nth-child(1) {
+            z-index: 3;
+        }
+
+        .profile-card:nth-child(2) {
+            z-index: 2;
+            transform: scale(0.95) translateY(10px);
+        }
+
+        .profile-card:nth-child(3) {
+            z-index: 1;
+            transform: scale(0.9) translateY(20px);
+        }
+
+        .card-image {
+            width: 100%;
+            height: 250px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 4rem;
+            position: relative;
+        }
+
+        .card-content {
+            padding: 20px;
+        }
+
+        .card-name {
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .card-age {
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .card-compatibility {
+            background: linear-gradient(135deg, #4a90e2 0%, #7b68ee 100%);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+
+        .card-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+
+        .card-tag {
+            background: #f0f0f0;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            color: #666;
+        }
+
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 20px;
+        }
+
+        .action-btn {
+            width: 60px;
+            height: 60px;
+            border: none;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .reject-btn {
+            background: #f0f0f0;
+            color: #666;
+        }
+
+        .reject-btn:hover {
+            background: #ff6b6b;
+            color: white;
+            transform: scale(1.1);
+        }
+
+        .like-btn {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ff8e53 100%);
+            color: white;
+        }
+
+        .like-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
+        }
+
+        /* マッチング成立画面 */
+        .match-screen {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ff8e53 100%);
+            color: white;
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .celebration {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            animation: bounce 1s ease-in-out infinite alternate;
+        }
+
+        @keyframes bounce {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-10px); }
+        }
+
+        .match-profiles {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .match-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: white;
+            color: #ff6b6b;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: bold;
+        }
+
+        .match-text {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 30px;
+        }
+
+        .match-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .match-btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 25px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+
+        .match-btn.primary {
+            background: white;
+            color: #ff6b6b;
+        }
+
+        .match-btn.secondary {
+            background: transparent;
+            color: white;
+            border: 2px solid white;
+        }
+
+        .match-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        /* チャット画面 */
+        .chat-screen {
+            background: white;
+            padding: 0;
+            justify-content: flex-start;
+        }
+
+        .chat-header {
+            background: linear-gradient(135deg, #4a90e2 0%, #7b68ee 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            max-height: 400px;
+        }
+
+        .message {
+            display: flex;
+            margin-bottom: 15px;
+            align-items: flex-start;
+        }
+
+        .message.received {
+            justify-content: flex-start;
+        }
+
+        .message.sent {
+            justify-content: flex-end;
+        }
+
+        .message-bubble {
+            max-width: 70%;
+            padding: 12px 16px;
+            border-radius: 18px;
+            font-size: 0.95rem;
+            line-height: 1.4;
+        }
+
+        .message.received .message-bubble {
+            background: #f0f0f0;
+            color: #333;
+        }
+
+        .message.sent .message-bubble {
+            background: linear-gradient(135deg, #4a90e2 0%, #7b68ee 100%);
+            color: white;
+        }
+
+        .ai-suggestions {
+            background: #f8f9fa;
+            border-top: 1px solid #e0e0e0;
+            padding: 15px;
+            margin-bottom: 0;
+        }
+
+        .ai-suggestions.show {
+            display: block;
+        }
+
+        .ai-suggestions.hide {
+            display: none;
+        }
+
+        .ai-suggestion {
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 15px;
+            padding: 12px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+            line-height: 1.3;
+        }
+
+        .ai-suggestion:hover {
+            background: #f0f8ff;
+            border-color: #4a90e2;
+        }
+
+        .ai-suggestion:last-child {
+            margin-bottom: 0;
+        }
+
+        .chat-input {
+            display: flex;
+            padding: 15px;
+            border-top: 1px solid #e0e0e0;
+            background: white;
+        }
+
+        .message-input {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid #e0e0e0;
+            border-radius: 20px;
+            font-size: 1rem;
+            margin-right: 10px;
+        }
+
+        .ai-assist-btn {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ff8e53 100%);
+            color: white;
+            border: none;
+            padding: 12px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: bold;
+            margin-right: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .ai-assist-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .send-btn {
+            background: linear-gradient(135deg, #4a90e2 0%, #7b68ee 100%);
+            color: white;
+            border: none;
+            padding: 12px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+
+        .send-btn:hover {
+            transform: scale(1.05);
+        }
+
+        /* レスポンシブ対応 */
+        @media (max-width: 480px) {
+            .container {
+                max-width: 100%;
+            }
+            
+            .logo {
+                font-size: 2rem;
+            }
+            
+            .purpose-card {
+                padding: 15px;
+            }
+            
+            .form-input, .form-select {
+                padding: 12px;
+            }
+        }
+
+        /* ハート飛び出しアニメーション */
+        .heart-animation {
+            position: fixed;
+            z-index: 1000;
+            pointer-events: none;
+            font-size: 2rem;
+            color: #ff6b6b;
+            animation: heartFly 2s ease-out forwards;
+        }
+
+        @keyframes heartFly {
+            0% {
+                transform: scale(1) translateY(0);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(2) translateY(-100px);
+                opacity: 0;
+            }
+        }
+
+        /* タイピングアニメーション */
+        .typing-animation {
+            border-right: 2px solid #4a90e2;
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%, 50% { border-color: #4a90e2; }
+            51%, 100% { border-color: transparent; }
+        }
+
+        /* 粒子アニメーション */
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background: #ff6b6b;
+            animation: confetti-fall 3s linear infinite;
+            z-index: 1000;
+        }
+
+        @keyframes confetti-fall {
+            0% {
+                transform: translateY(-100vh) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+    </style>
 </head>
 <body>
     <div class="container">
+        <!-- スタート画面 -->
         <div class="screen start-screen active" id="start-screen">
             <div class="logo">🤝 Tsunagaru AI</div>
             <div class="subtitle">AIと紡ぐ、新しいつながりの物語を、<br>今すぐ体験する。</div>
             <button class="cta-button" onclick="goToScreen('purpose-screen')">デモを体験する</button>
         </div>
 
+        <!-- 目的選択画面 -->
         <div class="screen purpose-screen" id="purpose-screen">
             <div class="purpose-title">どのような『つながり』を探しますか？</div>
             <div class="purpose-cards">
@@ -36,6 +799,7 @@
             </div>
         </div>
 
+        <!-- プロフィール作成画面 -->
         <div class="screen profile-screen" id="profile-screen">
             <div class="profile-title">AIがあなたのことを知るために、<br>いくつか質問させてください。</div>
             
@@ -76,6 +840,7 @@
             <button class="analyze-button" id="analyze-btn" onclick="startAnalysis()">AIに分析してもらう</button>
         </div>
 
+        <!-- AI分析画面 -->
         <div class="screen analysis-screen" id="analysis-screen">
             <div class="analysis-text" id="analysis-text">あなたに合いそうな人を探しています...</div>
             <div class="analysis-animation" id="analysis-animation"></div>
@@ -99,6 +864,7 @@
             </div>
         </div>
 
+        <!-- メイン画面 -->
         <div class="screen main-screen" id="main-screen">
             <div class="header">
                 <div class="user-info">
@@ -109,7 +875,8 @@
             </div>
             
             <div class="card-stack" id="card-stack">
-                </div>
+                <!-- プロフィールカードがここに動的に生成される -->
+            </div>
             
             <div class="action-buttons">
                 <button class="action-btn reject-btn" onclick="rejectCard()">✕</button>
@@ -117,6 +884,7 @@
             </div>
         </div>
 
+        <!-- マッチング成立画面 -->
         <div class="screen match-screen" id="match-screen">
             <div class="celebration">🎉</div>
             <div class="match-text" id="match-text">恵子さんとマッチしました！</div>
@@ -131,6 +899,7 @@
             </div>
         </div>
 
+        <!-- チャット画面 -->
         <div class="screen chat-screen" id="chat-screen">
             <div class="chat-header" id="chat-header">恵子さんとのチャット</div>
             <div class="chat-messages" id="chat-messages">
@@ -159,6 +928,493 @@
         </div>
     </div>
 
-    <script src="script.js"></script>
+    <script>
+        // グローバル変数
+        let currentScreen = 'start-screen';
+        let selectedPurpose = '';
+        let userProfile = {};
+        let currentCardIndex = 0;
+        let likeCount = 0;
+        let matchedPartner = null;
+        let isTyping = false;
+
+        // ダミーデータ
+        const profiles = [
+            {
+                name: "鈴木 恵子",
+                age: 72,
+                avatar: "恵",
+                compatibility: 85,
+                tags: ["#俳句", "#御朱印集め", "#散歩", "#お茶"],
+                intro: "夫と死別し、日中話す相手が少なくなりました。散歩がてら、一緒にお茶でもできる方と出会えたら嬉しいです。",
+                hobbies: ["俳句", "御朱印集め"],
+                image: "🌸"
+            },
+            {
+                name: "高橋 健一",
+                age: 45,
+                avatar: "健",
+                compatibility: 78,
+                tags: ["#料理", "#子供好き", "#映画鑑賞", "#旅行"],
+                intro: "仕事が落ち着き、もう一度パートナーと穏やかな家庭を築きたいと思っています。休日は娘と料理をするのが楽しみです。",
+                hobbies: ["料理", "映画鑑賞"],
+                image: "👨‍🍳"
+            },
+            {
+                name: "Maria",
+                age: 25,
+                avatar: "M",
+                compatibility: 92,
+                tags: ["#アニメ", "#旅行", "#語学交換", "#文化交流"],
+                intro: "日本の文化が大好きです！一緒に話しながら日本語を教えてくれる友達を探しています。Let's be friends!",
+                hobbies: ["アニメ", "旅行"],
+                image: "🌍"
+            },
+            {
+                name: "田中 明美",
+                age: 38,
+                avatar: "明",
+                compatibility: 83,
+                tags: ["#カフェ巡り", "#読書", "#音楽", "#アート"],
+                intro: "新しい街に引っ越してきたばかりです。一緒にカフェ巡りを楽しんでくれる友達を探しています。",
+                hobbies: ["カフェ巡り", "読書"],
+                image: "☕"
+            },
+            {
+                name: "佐藤 雄太",
+                age: 29,
+                avatar: "雄",
+                compatibility: 76,
+                tags: ["#スポーツ", "#アウトドア", "#写真", "#バイク"],
+                intro: "アクティブに過ごすのが好きです。一緒にアウトドアを楽しめる仲間を探しています。",
+                hobbies: ["スポーツ", "アウトドア"],
+                image: "🏃‍♂️"
+            }
+        ];
+
+        // 画面遷移
+        function goToScreen(screenId) {
+            const currentScreenEl = document.getElementById(currentScreen);
+            const nextScreenEl = document.getElementById(screenId);
+            
+            currentScreenEl.classList.remove('active');
+            currentScreenEl.classList.add('prev');
+            
+            setTimeout(() => {
+                nextScreenEl.classList.add('active');
+                currentScreen = screenId;
+                
+                // 画面固有の初期化処理
+                if (screenId === 'main-screen') {
+                    initializeMainScreen();
+                } else if (screenId === 'analysis-screen') {
+                    setTimeout(() => {
+                        startAnalysisAnimation();
+                    }, 500);
+                }
+            }, 250);
+        }
+
+        // 目的選択
+        function selectPurpose(element, purpose) {
+            document.querySelectorAll('.purpose-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            element.classList.add('selected');
+            selectedPurpose = purpose;
+            
+            setTimeout(() => {
+                goToScreen('profile-screen');
+            }, 800);
+        }
+
+        // タグ選択
+        function toggleTag(element) {
+            element.classList.toggle('selected');
+            validateForm();
+        }
+
+        // フォーム検証
+        function validateForm() {
+            const nickname = document.getElementById('nickname').value.trim();
+            const age = document.getElementById('age').value;
+            const selectedTags = document.querySelectorAll('.tag.selected');
+            const analyzeBtn = document.getElementById('analyze-btn');
+            
+            if (nickname && age && selectedTags.length > 0) {
+                analyzeBtn.classList.add('active');
+            } else {
+                analyzeBtn.classList.remove('active');
+            }
+        }
+
+        // フォーム要素にイベントリスナーを追加
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('nickname').addEventListener('input', validateForm);
+            document.getElementById('age').addEventListener('change', validateForm);
+        });
+
+        // AI分析開始
+        function startAnalysis() {
+            const nickname = document.getElementById('nickname').value.trim();
+            const age = document.getElementById('age').value;
+            const selectedTags = Array.from(document.querySelectorAll('.tag.selected')).map(tag => tag.textContent);
+            
+            userProfile = {
+                nickname: nickname,
+                age: age,
+                tags: selectedTags,
+                avatar: nickname.charAt(0).toUpperCase()
+            };
+            
+            goToScreen('analysis-screen');
+        }
+
+        // 分析アニメーション
+        function startAnalysisAnimation() {
+            const animationContainer = document.getElementById('analysis-animation');
+            const analysisText = document.getElementById('analysis-text');
+            const radarChart = document.getElementById('radar-chart');
+            
+            // 粒子生成
+            for (let i = 0; i < 20; i++) {
+                setTimeout(() => {
+                    createParticle(animationContainer);
+                }, i * 100);
+            }
+            
+            // テキスト変更
+            const texts = [
+                "あなたに合いそうな人を探しています...",
+                "相性が良さそうな人を準備しています...",
+                "AIによる詳細分析を実行中...",
+                "最適なマッチングを計算しています..."
+            ];
+            
+            let textIndex = 0;
+            const textInterval = setInterval(() => {
+                if (textIndex < texts.length) {
+                    analysisText.textContent = texts[textIndex];
+                    textIndex++;
+                } else {
+                    clearInterval(textInterval);
+                }
+            }, 1000);
+            
+            // レーダーチャート表示
+            setTimeout(() => {
+                radarChart.classList.add('show');
+                analysisText.textContent = "分析が完了しました。あなたにぴったりの方を探しに行きましょう！";
+                
+                setTimeout(() => {
+                    goToScreen('main-screen');
+                }, 2000);
+            }, 4000);
+        }
+
+        // 粒子生成
+        function createParticle(container) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = Math.random() * 180 + 'px';
+            particle.style.top = Math.random() * 180 + 'px';
+            particle.style.animationDelay = Math.random() * 2 + 's';
+            container.appendChild(particle);
+            
+            setTimeout(() => {
+                particle.remove();
+            }, 3000);
+        }
+
+        // メイン画面初期化
+        function initializeMainScreen() {
+            document.getElementById('user-avatar').textContent = userProfile.avatar;
+            document.getElementById('user-name').textContent = userProfile.nickname;
+            
+            renderCards();
+        }
+
+        // カード生成
+        function renderCards() {
+            const cardStack = document.getElementById('card-stack');
+            cardStack.innerHTML = '';
+            
+            for (let i = 0; i < Math.min(3, profiles.length - currentCardIndex); i++) {
+                const profile = profiles[currentCardIndex + i];
+                const card = createProfileCard(profile, i);
+                cardStack.appendChild(card);
+            }
+        }
+
+        // プロフィールカード作成
+        function createProfileCard(profile, index) {
+            const card = document.createElement('div');
+            card.className = 'profile-card';
+            card.style.zIndex = 3 - index;
+            card.style.transform = `scale(${1 - index * 0.05}) translateY(${index * 10}px)`;
+            
+            card.innerHTML = `
+                <div class="card-image">${profile.image}</div>
+                <div class="card-content">
+                    <div class="card-name">${profile.name}</div>
+                    <div class="card-age">${profile.age}歳</div>
+                    <div class="card-compatibility">AI相性 ${profile.compatibility}%</div>
+                    <div class="card-tags">
+                        ${profile.tags.map(tag => `<span class="card-tag">${tag}</span>`).join('')}
+                    </div>
+                </div>
+            `;
+            
+            return card;
+        }
+
+        // カード拒否
+        function rejectCard() {
+            animateCard('left');
+            nextCard();
+        }
+
+        // カードいいね
+        function likeCard() {
+            animateCard('right');
+            createHeartAnimation();
+            likeCount++;
+            
+            // 3回目のいいねでマッチング
+            if (likeCount === 3) {
+                matchedPartner = profiles[currentCardIndex];
+                setTimeout(() => {
+                    goToMatch();
+                }, 1000);
+            } else {
+                nextCard();
+            }
+        }
+
+        // カードアニメーション
+        function animateCard(direction) {
+            const topCard = document.querySelector('.profile-card');
+            if (topCard) {
+                const translateX = direction === 'left' ? '-100%' : '100%';
+                topCard.style.transform = `translateX(${translateX}) rotate(${direction === 'left' ? '-' : ''}30deg)`;
+                topCard.style.opacity = '0';
+                
+                setTimeout(() => {
+                    topCard.remove();
+                }, 300);
+            }
+        }
+
+        // 次のカード
+        function nextCard() {
+            currentCardIndex++;
+            setTimeout(() => {
+                renderCards();
+            }, 300);
+        }
+
+        // ハートアニメーション
+        function createHeartAnimation() {
+            const heart = document.createElement('div');
+            heart.className = 'heart-animation';
+            heart.innerHTML = '♥';
+            heart.style.left = '50%';
+            heart.style.top = '50%';
+            document.body.appendChild(heart);
+            
+            setTimeout(() => {
+                heart.remove();
+            }, 2000);
+        }
+
+        // マッチング画面へ
+        function goToMatch() {
+            document.getElementById('match-text').textContent = `${matchedPartner.name}とマッチしました！`;
+            document.getElementById('partner-match-avatar').textContent = matchedPartner.avatar;
+            
+            // 紙吹雪アニメーション
+            createConfetti();
+            
+            goToScreen('match-screen');
+        }
+
+        // 紙吹雪生成
+        function createConfetti() {
+            for (let i = 0; i < 50; i++) {
+                setTimeout(() => {
+                    const confetti = document.createElement('div');
+                    confetti.className = 'confetti';
+                    confetti.style.left = Math.random() * 100 + 'vw';
+                    confetti.style.backgroundColor = ['#ff6b6b', '#4a90e2', '#ff8e53', '#7b68ee'][Math.floor(Math.random() * 4)];
+                    confetti.style.animationDelay = Math.random() * 3 + 's';
+                    document.body.appendChild(confetti);
+                    
+                    setTimeout(() => {
+                        confetti.remove();
+                    }, 3000);
+                }, i * 50);
+            }
+        }
+
+        // チャット画面へ
+        function goToChat(useAI) {
+            document.getElementById('chat-header').textContent = `${matchedPartner.name}とのチャット`;
+            
+            if (useAI) {
+                // AI提案の内容を動的に更新
+                const userHobby = userProfile.tags[0] || '#散歩';
+                const partnerHobby = matchedPartner.hobbies[0] || '俳句';
+                
+                document.getElementById('suggestion-hobby').textContent = partnerHobby;
+                document.getElementById('suggestion-user-hobby').textContent = userHobby.replace('#', '');
+                document.getElementById('suggestion-user-name').textContent = userProfile.nickname;
+            }
+            
+            goToScreen('chat-screen');
+        }
+
+        // AI提案表示
+        function showAISuggestions() {
+            const suggestions = document.getElementById('ai-suggestions');
+            suggestions.classList.toggle('hide');
+            suggestions.classList.toggle('show');
+        }
+
+        // AI提案選択
+        function selectSuggestion(element, index) {
+            const messageInput = document.getElementById('message-input');
+            const suggestionText = element.textContent;
+            
+            // タイピングアニメーション
+            messageInput.value = '';
+            messageInput.classList.add('typing-animation');
+            
+            let charIndex = 0;
+            const typingInterval = setInterval(() => {
+                if (charIndex < suggestionText.length) {
+                    messageInput.value += suggestionText[charIndex];
+                    charIndex++;
+                } else {
+                    clearInterval(typingInterval);
+                    messageInput.classList.remove('typing-animation');
+                }
+            }, 50);
+            
+            // 提案を非表示
+            document.getElementById('ai-suggestions').classList.add('hide');
+            document.getElementById('ai-suggestions').classList.remove('show');
+        }
+
+        // メッセージ送信
+        function sendMessage() {
+            const messageInput = document.getElementById('message-input');
+            const message = messageInput.value.trim();
+            
+            if (message) {
+                const chatMessages = document.getElementById('chat-messages');
+                
+                // 自分のメッセージを追加
+                const messageElement = document.createElement('div');
+                messageElement.className = 'message sent';
+                messageElement.innerHTML = `<div class="message-bubble">${message}</div>`;
+                chatMessages.appendChild(messageElement);
+                
+                // 入力欄をクリア
+                messageInput.value = '';
+                
+                // 相手からの返信をシミュレート
+                setTimeout(() => {
+                    const responses = [
+                        "ありがとうございます！とても嬉しいです。",
+                        "こちらこそ、よろしくお願いします。",
+                        "お話しできて楽しいです。また明日もチャットしましょう！",
+                        "素敵なメッセージをありがとうございます。"
+                    ];
+                    
+                    const randomResponse = responses[Math.floor(Math.random() * responses.length)];
+                    const responseElement = document.createElement('div');
+                    responseElement.className = 'message received';
+                    responseElement.innerHTML = `<div class="message-bubble">${randomResponse}</div>`;
+                    chatMessages.appendChild(responseElement);
+                    
+                    // スクロールを最下部に
+                    chatMessages.scrollTop = chatMessages.scrollHeight;
+                }, 1000);
+                
+                // スクロールを最下部に
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+        }
+
+        // Enterキーでメッセージ送信
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('message-input').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    sendMessage();
+                }
+            });
+        });
+
+        // スワイプ機能（タッチデバイス用）
+        let startX = 0;
+        let startY = 0;
+        let currentX = 0;
+        let currentY = 0;
+        let isSwipe = false;
+
+        document.addEventListener('touchstart', function(e) {
+            if (currentScreen === 'main-screen') {
+                startX = e.touches[0].clientX;
+                startY = e.touches[0].clientY;
+                isSwipe = true;
+            }
+        });
+
+        document.addEventListener('touchmove', function(e) {
+            if (isSwipe && currentScreen === 'main-screen') {
+                currentX = e.touches[0].clientX;
+                currentY = e.touches[0].clientY;
+                
+                const diffX = currentX - startX;
+                const diffY = currentY - startY;
+                
+                if (Math.abs(diffX) > Math.abs(diffY)) {
+                    const topCard = document.querySelector('.profile-card');
+                    if (topCard) {
+                        const rotation = diffX * 0.1;
+                        topCard.style.transform = `translateX(${diffX}px) rotate(${rotation}deg)`;
+                        topCard.style.opacity = 1 - Math.abs(diffX) / 200;
+                    }
+                }
+            }
+        });
+
+        document.addEventListener('touchend', function(e) {
+            if (isSwipe && currentScreen === 'main-screen') {
+                const diffX = currentX - startX;
+                
+                if (Math.abs(diffX) > 100) {
+                    if (diffX > 0) {
+                        likeCard();
+                    } else {
+                        rejectCard();
+                    }
+                } else {
+                    const topCard = document.querySelector('.profile-card');
+                    if (topCard) {
+                        topCard.style.transform = '';
+                        topCard.style.opacity = '1';
+                    }
+                }
+                
+                isSwipe = false;
+            }
+        });
+
+        // 初期化
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Tsunagaru AI プロトタイプが開始されました');
+        });
+    </script>
 </body>
 </html>
