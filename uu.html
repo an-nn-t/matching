@@ -992,39 +992,28 @@
             }
         ];
 
-// 画面遷移
-function goToScreen(screenId) {
-    const currentScreenEl = document.getElementById(currentScreen);
-    const nextScreenEl = document.getElementById(screenId);
-    
-    // 現在の画面の要素が存在しない場合のエラーハンドリングを追加
-    if (!currentScreenEl) {
-        console.error('Current screen element not found:', currentScreen);
-        return;
-    }
-    
-    if (!nextScreenEl) {
-        console.error('Next screen element not found:', screenId);
-        return;
-    }
-    
-    currentScreenEl.classList.remove('active');
-    currentScreenEl.classList.add('prev');
-    
-    setTimeout(() => {
-        nextScreenEl.classList.add('active');
-        currentScreen = screenId;
-        
-        // 画面固有の初期化処理
-        if (screenId === 'main-screen') {
-            initializeMainScreen();
-        } else if (screenId === 'analysis-screen') {
+        // 画面遷移
+        function goToScreen(screenId) {
+            const currentScreenEl = document.getElementById(currentScreen);
+            const nextScreenEl = document.getElementById(screenId);
+            
+            currentScreenEl.classList.remove('active');
+            currentScreenEl.classList.add('prev');
+            
             setTimeout(() => {
-                startAnalysisAnimation();
-            }, 500);
+                nextScreenEl.classList.add('active');
+                currentScreen = screenId;
+                
+                // 画面固有の初期化処理
+                if (screenId === 'main-screen') {
+                    initializeMainScreen();
+                } else if (screenId === 'analysis-screen') {
+                    setTimeout(() => {
+                        startAnalysisAnimation();
+                    }, 500);
+                }
+            }, 250);
         }
-    }, 250);
-}
 
         // 目的選択
         function selectPurpose(element, purpose) {
@@ -1186,29 +1175,21 @@ function goToScreen(screenId) {
         }
 
         // カードいいね
-        // カードいいね
-function likeCard() {
-    // 現在のカードのプロフィールを取得
-    const currentProfile = profiles[currentCardIndex];
-    if (!currentProfile) {
-        console.error('No profile found at index:', currentCardIndex);
-        return;
-    }
-    
-    animateCard('right');
-    createHeartAnimation();
-    likeCount++;
-    
-    // 3回目のいいねでマッチング
-    if (likeCount === 3) {
-        matchedPartner = currentProfile; // ここを修正
-        setTimeout(() => {
-            goToMatch();
-        }, 1000);
-    } else {
-        nextCard();
-    }
-}
+        function likeCard() {
+            animateCard('right');
+            createHeartAnimation();
+            likeCount++;
+            
+            // 3回目のいいねでマッチング
+            if (likeCount === 3) {
+                matchedPartner = profiles[currentCardIndex];
+                setTimeout(() => {
+                    goToMatch();
+                }, 1000);
+            } else {
+                nextCard();
+            }
+        }
 
         // カードアニメーション
         function animateCard(direction) {
