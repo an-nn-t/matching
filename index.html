@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tsunagaru AI - AIと紡ぐ、新しいつながりの物語</title>
+    <title>Matching AI</title>
     <style>
         * {
             margin: 0;
@@ -771,31 +771,34 @@
     <div class="container">
         <!-- スタート画面 -->
         <div class="screen start-screen active" id="start-screen">
-            <div class="logo">🤝 Tsunagaru AI</div>
-            <div class="subtitle">AIと紡ぐ、新しいつながりの物語を、<br>今すぐ体験する。</div>
+            <div class="logo">❤️🤝Matching AI</div>
+            <div class="subtitle">Matching AIを、<br>今すぐ体験する。</div>
             <button class="cta-button" onclick="goToScreen('purpose-screen')">デモを体験する</button>
         </div>
 
         <!-- 目的選択画面 -->
         <div class="screen purpose-screen" id="purpose-screen">
-            <div class="purpose-title">どのような『つながり』を探しますか？</div>
+            <div class="purpose-title">どのような人を探しますか？</div>
             <div class="purpose-cards">
-                <div class="purpose-card" onclick="selectPurpose(this, 'hobby')">
-                    <div class="purpose-icon">🎨</div>
-                    <div class="purpose-text">趣味の仲間を探す</div>
+                <div class="purpose-card" onclick="selectPurpose(this, 'romance')">
+                    <div class="purpose-icon">💕</div>
+                    <div class="purpose-text">恋愛・パートナー探し</div>
                 </div>
                 <div class="purpose-card" onclick="selectPurpose(this, 'friend')">
                     <div class="purpose-icon">🤝</div>
                     <div class="purpose-text">気軽な友達を探す</div>
                 </div>
+                <div class="purpose-card" onclick="selectPurpose(this, 'hobby')">
+                    <div class="purpose-icon">🎨</div>
+                    <div class="purpose-text">趣味の仲間を探す</div>
+                </div>
+                
                 <div class="purpose-card" onclick="selectPurpose(this, 'study')">
                     <div class="purpose-icon">📚</div>
                     <div class="purpose-text">学び合い・語学交換</div>
                 </div>
-                <div class="purpose-card" onclick="selectPurpose(this, 'romance')">
-                    <div class="purpose-icon">💕</div>
-                    <div class="purpose-text">恋愛・パートナー探し</div>
-                </div>
+                
+
             </div>
         </div>
 
@@ -812,6 +815,7 @@
                 <label class="form-label">年代</label>
                 <select class="form-select" id="age">
                     <option value="">選択してください</option>
+                    <option value="10代">10代</option>
                     <option value="20代">20代</option>
                     <option value="30代">30代</option>
                     <option value="40代">40代</option>
@@ -827,13 +831,13 @@
                     <div class="tag" onclick="toggleTag(this)">#散歩</div>
                     <div class="tag" onclick="toggleTag(this)">#カフェ巡り</div>
                     <div class="tag" onclick="toggleTag(this)">#映画鑑賞</div>
-                    <div class="tag" onclick="toggleTag(this)">#歴史</div>
-                    <div class="tag" onclick="toggleTag(this)">#料理</div>
-                    <div class="tag" onclick="toggleTag(this)">#ペット</div>
+                    <div class="tag" onclick="toggleTag(this)">#ゲーム</div>
+                    <div class="tag" onclick="toggleTag(this)">#アニメ</div>
+                    <div class="tag" onclick="toggleTag(this)">#動物</div>
                     <div class="tag" onclick="toggleTag(this)">#旅行</div>
                     <div class="tag" onclick="toggleTag(this)">#音楽</div>
                     <div class="tag" onclick="toggleTag(this)">#読書</div>
-                    <div class="tag" onclick="toggleTag(this)">#アニメ</div>
+                    <div class="tag" onclick="toggleTag(this)">#外国語</div>
                 </div>
             </div>
             
