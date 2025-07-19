@@ -1188,38 +1188,32 @@ function goToScreen(screenId) {
     
 
 // カードいいね
-// カードいいね
 function likeCard() {
-    // 連続クリック防止
-    if (isAnimating) return;
-    isAnimating = true;
-    
-    // 現在のカードのプロフィールを取得
-    const currentProfile = profiles[currentCardIndex];
-    if (!currentProfile) {
-        console.error('No profile found at index:', currentCardIndex);
-        isAnimating = false;
-        return;
-    }
-    
+    const topCard = document.querySelector('.profile-card');
+    if (!topCard) return; // カードがなければ処理を中断
+
+    // 他の処理をする前に、いいねされたプロフィール情報を保存しておく
+    const likedProfile = profiles[currentCardIndex];
+
     animateCard('right');
     createHeartAnimation();
     likeCount++;
-    
-    // 3回目のいいねでマッチング
+
+    // 状態を常に正しく保つため、常にnextCard()を呼び出す
+    nextCard(); 
+
+    // いいねの結果、マッチングが成立したかを確認する
     if (likeCount === 3) {
-        matchedPartner = currentProfile;
+        matchedPartner = likedProfile; // 先ほど保存したプロフィール情報を使う
+        
+        // カードのアニメーションが終わった直後にマッチ画面へ遷移させる
+        // 短い時間に変更することで、ユーザー体験がスムーズになります
         setTimeout(() => {
             goToMatch();
-            isAnimating = false;
-        }, 1000);
-    } else {
-        setTimeout(() => {
-            nextCard();
-            isAnimating = false;
-        }, 400);
+        }, 350); 
     }
 }
+
         // カードアニメーション
         function animateCard(direction) {
             const topCard = document.querySelector('.profile-card');
