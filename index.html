@@ -313,6 +313,7 @@
             background: white;
             padding: 20px;
             justify-content: flex-start;
+            overflow-y: auto;
         }
 
         .header {
@@ -354,21 +355,21 @@
         .card-stack {
             position: relative;
             width: 100%;
-            height: 500px;
+            height: 400px;
             margin: 20px 0;
         }
 
         .profile-card {
-            position: absolute;
-            width: 100%;
-            height: 450px;
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            overflow: hidden;
-            cursor: pointer;
-            transition: transform 0.3s ease;
-        }
+    position: absolute;
+    width: 100%;
+    height: 380px; /* 450pxから380pxに縮小 */
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
 
         .profile-card:nth-child(1) {
             z-index: 3;
@@ -385,16 +386,16 @@
         }
 
         .card-image {
-            width: 100%;
-            height: 250px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 4rem;
-            position: relative;
-        }
+    width: 100%;
+    height: 200px; /* 250pxから200pxに縮小 */
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 3rem; /* 4remから3remに縮小 */
+    position: relative;
+}
 
         .card-content {
             padding: 20px;
@@ -726,14 +727,66 @@
                 opacity: 0;
             }
         }
-        .swipe-hint {
+.swipe-hint {
     text-align: center;
-    margin-top: 20px;
-    padding: 15px;
+    margin-top: 10px; /* 20pxから10pxに縮小 */
+    padding: 10px; /* 15pxから10pxに縮小 */
     background: rgba(74, 144, 226, 0.1);
     border-radius: 10px;
-    font-size: 0.9rem;
+    font-size: 0.8rem; /* 0.9remから0.8remに縮小 */
     color: #4a90e2;
+}
+
+/* 小さい画面用のメディアクエリを追加 */
+@media (max-height: 700px) {
+    .card-stack {
+        height: 350px;
+    }
+    
+    .profile-card {
+        height: 330px;
+    }
+    
+    .card-image {
+        height: 180px;
+        font-size: 2.5rem;
+    }
+    
+    .swipe-hint {
+        margin-top: 5px;
+        padding: 8px;
+        font-size: 0.75rem;
+    }
+    
+    .main-screen {
+        padding: 15px;
+    }
+}
+
+/* iPhone SE3などの非常に小さい画面用 */
+@media (max-height: 600px) {
+    .card-stack {
+        height: 300px;
+    }
+    
+    .profile-card {
+        height: 280px;
+    }
+    
+    .card-image {
+        height: 150px;
+        font-size: 2rem;
+    }
+    
+    .card-content {
+        padding: 15px;
+    }
+    
+    .swipe-hint {
+        margin-top: 0;
+        padding: 6px;
+        font-size: 0.7rem;
+    }
 }
 
 .swipe-hint-icons {
