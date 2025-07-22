@@ -436,46 +436,7 @@
             color: #666;
         }
 
-        .action-buttons {
-            display: flex;
-            justify-content: center;
-            gap: 30px;
-            margin-top: 20px;
-        }
 
-        .action-btn {
-            width: 60px;
-            height: 60px;
-            border: none;
-            border-radius: 50%;
-            font-size: 1.5rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .reject-btn {
-            background: #f0f0f0;
-            color: #666;
-        }
-
-        .reject-btn:hover {
-            background: #ff6b6b;
-            color: white;
-            transform: scale(1.1);
-        }
-
-        .like-btn {
-            background: linear-gradient(135deg, #ff6b6b 0%, #ff8e53 100%);
-            color: white;
-        }
-
-        .like-btn:hover {
-            transform: scale(1.1);
-            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
-        }
 
         /* マッチング成立画面 */
         .match-screen {
@@ -881,11 +842,15 @@
             <div class="card-stack" id="card-stack">
                 <!-- プロフィールカードがここに動的に生成される -->
             </div>
+            <div class="swipe-hint">
+    <div>左右にスワイプして選択</div>
+    <div class="swipe-hint-icons">
+        <span class="swipe-left">← ✕</span>
+        <span>|</span>
+        <span class="swipe-right">♥ →</span>
+    </div>
+</div>
             
-            <div class="action-buttons">
-                <button class="action-btn reject-btn" onclick="rejectCard()">✕</button>
-                <button class="action-btn like-btn" onclick="likeCard()">♥</button>
-            </div>
         </div>
 
         <!-- マッチング成立画面 -->
